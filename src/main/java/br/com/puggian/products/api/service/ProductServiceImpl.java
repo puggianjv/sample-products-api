@@ -1,8 +1,8 @@
 package br.com.puggian.products.api.service;
 
+import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.repository.ProductRepository;
-import br.com.puggian.products.api.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,5 +19,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> listProducts() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public Product getProductById(long id) {
+        return productRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 }

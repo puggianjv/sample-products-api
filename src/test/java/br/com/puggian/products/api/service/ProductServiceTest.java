@@ -1,5 +1,6 @@
 package br.com.puggian.products.api.service;
 
+import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.model.Supplier;
 import br.com.puggian.products.api.repository.ProductRepository;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -32,7 +34,7 @@ public class ProductServiceTest {
     }
 
     @Test
-    public void shouldReturnProductList_whenRepositoryFindProducts() {
+    public void shouldReturnProductList_whenFindProducts() {
         LocalDateTime dateTime = LocalDateTime.now();
         Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
         Product product1 = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
@@ -55,5 +57,27 @@ public class ProductServiceTest {
         when(repository.findAll()).thenReturn(Collections.emptyList());
         List<Product> list = service.listProducts();
         assertEquals(0, list.size());
+    }
+
+    @Test
+    public void shouldReturnProduct_whenFindProduct() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+
+        when(repository.findById(1L)).thenReturn(Optional.of(product));
+
+        Product result = service.getProductById(1L);
+
+        assertEquals(new Long(1L), result.getId());
+        assertEquals("Trakinas", result.getName());
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void shouldThrowResourceNotFoundException_whenNoProductIsFound() {
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        service.getProductById(1L);
     }
 }
