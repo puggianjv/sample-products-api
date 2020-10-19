@@ -17,13 +17,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateProductDto {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "{product.name.notBlank}")
     private String name;
 
-    @DecimalMin(value = "0.01", message = "Minimum price: 0.01")
+    @DecimalMin(value = "0.01", message = "{product.price.decimalMin}")
     @Digits(integer=999999999, fraction=2,
-            message = "Invalid price. It needs to be a number between 0.01 and 999999999.00")
-    @NotNull(message = "Price is required")
+            message = "{product.price.digits}")
+    @NotNull(message = "{product.price.notNull}")
     private BigDecimal price;
 
 }

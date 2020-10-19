@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ProductQuantityDto {
 
-    @NotNull(message = "Quantity is required")
+    @NotNull(message = "{product.quantity.notNull}")
     private long quantity;
 
 }

@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
-        return new ApiErrorDto(ex.getMessage(), errors);
+        return new ApiErrorDto("Input validation failed", errors);
     }
 
 }
