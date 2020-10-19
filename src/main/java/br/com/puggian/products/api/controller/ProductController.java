@@ -5,12 +5,14 @@ import br.com.puggian.products.api.dto.ProductDto;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.service.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -31,21 +33,21 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> listProducts() {
-        List<Product> products = productService.listProducts();
-        return ResponseEntity.ok(convertToDto(products));
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductDto> listProducts() {
+        return convertToDto(productService.listProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProduct(@PathVariable("id") long id) {
-        Product product = productService.getProductById(id);
-        return ResponseEntity.ok(convertToDto(product));
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDto getProduct(@PathVariable("id") long id) {
+        return convertToDto(productService.getProductById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> insertProduct(@Valid @RequestBody CreateProductDto createProductDto) {
-        Product product = productService.createProduct(createProductDto);
-        return ResponseEntity.accepted().body(convertToDto(product));
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductDto insertProduct(@Valid @RequestBody CreateProductDto createProductDto) {
+        return convertToDto(productService.createProduct(createProductDto));
     }
 
     private List<ProductDto> convertToDto(List<Product> products) {
