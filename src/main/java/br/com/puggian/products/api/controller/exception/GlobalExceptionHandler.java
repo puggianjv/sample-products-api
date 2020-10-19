@@ -1,4 +1,4 @@
-package br.com.puggian.products.api.controller;
+package br.com.puggian.products.api.controller.exception;
 
 import br.com.puggian.products.api.dto.output.ApiErrorDto;
 import br.com.puggian.products.api.exception.QuantityExceededMaximumValueException;
