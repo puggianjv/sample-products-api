@@ -51,8 +51,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(UpdateProductDto dto) {
-        Product product = getProductById(dto.getId());
+    public Product updateProduct(UpdateProductDto dto, Long id) {
+        Product product = getProductById(id);
         LocalDateTime now = LocalDateTime.now();
 
         product.setName(dto.getName());

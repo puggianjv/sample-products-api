@@ -14,5 +14,5 @@ public interface ProductService {
 
     Product createProduct(CreateProductDto dto);
 
-    Product updateProduct(UpdateProductDto dto);
+    Product updateProduct(UpdateProductDto dto, Long id);
 }

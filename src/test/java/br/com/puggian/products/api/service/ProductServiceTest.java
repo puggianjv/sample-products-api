@@ -118,14 +118,14 @@ public class ProductServiceTest {
         Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
-        UpdateProductDto dto = new UpdateProductDto(1L, "Doritos", BigDecimal.TEN);
+        UpdateProductDto dto = new UpdateProductDto("Doritos", BigDecimal.TEN);
 
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
         when(productRepository.save(any())).thenReturn(new Product());
 
-        productService.updateProduct(dto);
+        productService.updateProduct(dto, 1L);
 
         verify(productRepository).save(captor.capture());
         Product productToSave = captor.getValue();

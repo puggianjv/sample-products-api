@@ -13,9 +13,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateProductDto {
 
-    @NotNull(message = "Id is required")
-    private Long id;
-
     @NotBlank(message = "Name is required")
     private String name;
 

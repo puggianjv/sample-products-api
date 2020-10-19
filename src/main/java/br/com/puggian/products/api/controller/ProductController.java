@@ -7,14 +7,7 @@ import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -51,10 +44,10 @@ public class ProductController {
         return convertToDto(productService.createProduct(dto));
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductDto updateProduct(@Valid @RequestBody UpdateProductDto dto) {
-        return convertToDto(productService.updateProduct(dto));
+    public ProductDto updateProduct(@Valid @RequestBody UpdateProductDto dto, @PathVariable Long id) {
+        return convertToDto(productService.updateProduct(dto, id));
     }
 
     private List<ProductDto> convertToDto(List<Product> products) {
