@@ -50,6 +50,12 @@ public class ProductController {
         return convertToDto(productService.updateProduct(dto, id));
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+    }
+
     private List<ProductDto> convertToDto(List<Product> products) {
         return products.stream()
                 .map(this::convertToDto)

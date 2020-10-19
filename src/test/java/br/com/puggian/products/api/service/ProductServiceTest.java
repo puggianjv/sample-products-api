@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -134,6 +137,27 @@ public class ProductServiceTest {
         assertEquals(BigDecimal.TEN, productToSave.getPrice());
         assertEquals(new Long(1L), productToSave.getSupplier().getId());
         assertEquals("Extra", productToSave.getSupplier().getName());
+    }
+
+    @Test
+    public void deleteProduct_ProductDeleted_CallRepositoryWithId() {
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+
+        doNothing().when(productRepository).deleteById(1L);
+
+        productService.deleteProduct(1L);
+
+        verify(productRepository).deleteById(captor.capture());
+        assertEquals(new Long(1L), captor.getValue());
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void deleteProduct_ProductNotFound_ThrowResourceNotFoundException() {
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+
+        doThrow(new EmptyResultDataAccessException(1)).when(productRepository).deleteById(1L);
+
+        productService.deleteProduct(1L);
     }
 
 }

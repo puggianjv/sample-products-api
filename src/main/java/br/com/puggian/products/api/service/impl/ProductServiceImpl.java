@@ -8,6 +8,7 @@ import br.com.puggian.products.api.model.Supplier;
 import br.com.puggian.products.api.repository.ProductRepository;
 import br.com.puggian.products.api.service.ProductService;
 import br.com.puggian.products.api.service.SupplierService;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -60,5 +61,14 @@ public class ProductServiceImpl implements ProductService {
         product.setLastUpdate(now);
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(Long id) {
+        try {
+            productRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new ResourceNotFoundException("Product not found for id " + id);
+        }
     }
 }
