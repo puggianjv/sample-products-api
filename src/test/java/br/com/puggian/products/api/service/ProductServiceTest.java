@@ -17,6 +17,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -57,9 +59,9 @@ public class ProductServiceTest {
         List<Product> products = Arrays.asList(product1, product2);
         supplier.setProducts(products);
 
-        when(productRepository.findAll()).thenReturn(products);
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(products));
 
-        List<Product> list = productService.listProducts();
+        List<Product> list = productService.listProducts(0, 10);
 
         assertEquals(2, list.size());
         assertEquals(new Long(1L), list.get(0).getId());
@@ -69,9 +71,27 @@ public class ProductServiceTest {
 
     @Test
     public void listProducts_NoProductFound_EmptyList() {
-        when(productRepository.findAll()).thenReturn(Collections.emptyList());
-        List<Product> list = productService.listProducts();
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(Collections.emptyList()));
+        List<Product> list = productService.listProducts(0, 10);
         assertEquals(0, list.size());
+    }
+
+    @Test
+    public void listProducts_ProductsFoundWithPagination_SplitList() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product1 = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        Product product2 = new Product(2L, "Doritos", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Arrays.asList(product1, product2);
+        supplier.setProducts(products);
+
+        when(productRepository.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(Collections.singletonList(product2)));
+
+        List<Product> list = productService.listProducts(1, 1);
+
+        assertEquals(1, list.size());
+        assertEquals(new Long(2L), list.get(0).getId());
+        assertEquals("Doritos", list.get(0).getName());
     }
 
     @Test

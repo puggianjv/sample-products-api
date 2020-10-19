@@ -12,6 +12,8 @@ import br.com.puggian.products.api.repository.ProductRepository;
 import br.com.puggian.products.api.service.ProductService;
 import br.com.puggian.products.api.service.SupplierService;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,8 +33,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> listProducts() {
-        return productRepository.findAll();
+    public List<Product> listProducts(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return productRepository.findAll(pageRequest).getContent();
     }
 
     @Override

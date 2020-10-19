@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,10 +33,11 @@ public class ProductController {
         this.mapper = mapper;
     }
 
-    @GetMapping
+    @GetMapping(params = { "page", "size" })
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductDto> listProducts() {
-        return mapper.convertProductToDto(productService.listProducts());
+    public List<ProductDto> listProducts(@RequestParam(value = "page", defaultValue = "0") int page,
+                                         @RequestParam(value = "size", defaultValue = "100") int size) {
+        return mapper.convertProductToDto(productService.listProducts(page, size));
     }
 
     @GetMapping("/{id}")
