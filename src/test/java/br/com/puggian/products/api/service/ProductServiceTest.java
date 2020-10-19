@@ -1,6 +1,7 @@
 package br.com.puggian.products.api.service;
 
-import br.com.puggian.products.api.dto.CreateProductDto;
+import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.UpdateProductDto;
 import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.model.Supplier;
@@ -110,5 +111,29 @@ public class ProductServiceTest {
         assertEquals("Extra", product.getSupplier().getName());
     }
 
+    @Test
+    public void updateProduct_ProductUpdated_Product() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+        UpdateProductDto dto = new UpdateProductDto(1L, "Doritos", BigDecimal.TEN);
+
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productRepository.save(any())).thenReturn(new Product());
+
+        productService.updateProduct(dto);
+
+        verify(productRepository).save(captor.capture());
+        Product productToSave = captor.getValue();
+        assertEquals("Doritos", productToSave.getName());
+        assertEquals(new Long(0L), productToSave.getQuantity());
+        assertEquals(BigDecimal.TEN, productToSave.getPrice());
+        assertEquals(new Long(1L), productToSave.getSupplier().getId());
+        assertEquals("Extra", productToSave.getSupplier().getName());
+    }
 
 }

@@ -1,4 +1,4 @@
-package br.com.puggian.products.api.dto;
+package br.com.puggian.products.api.dto.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

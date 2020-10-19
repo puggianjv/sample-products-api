@@ -1,6 +1,6 @@
 package br.com.puggian.products.api.controller;
 
-import br.com.puggian.products.api.dto.ApiErrorDto;
+import br.com.puggian.products.api.dto.output.ApiErrorDto;
 import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;

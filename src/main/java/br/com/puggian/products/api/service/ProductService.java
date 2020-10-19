@@ -1,6 +1,7 @@
 package br.com.puggian.products.api.service;
 
-import br.com.puggian.products.api.dto.CreateProductDto;
+import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.UpdateProductDto;
 import br.com.puggian.products.api.model.Product;
 
 import java.util.List;
@@ -11,5 +12,7 @@ public interface ProductService {
 
     Product getProductById(long id);
 
-    Product createProduct(CreateProductDto createProductDto);
+    Product createProduct(CreateProductDto dto);
+
+    Product updateProduct(UpdateProductDto dto);
 }

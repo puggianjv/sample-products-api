@@ -1,15 +1,16 @@
 package br.com.puggian.products.api.controller;
 
-import br.com.puggian.products.api.dto.CreateProductDto;
-import br.com.puggian.products.api.dto.ProductDto;
+import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.UpdateProductDto;
+import br.com.puggian.products.api.dto.output.ProductDto;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.service.ProductService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -46,8 +47,14 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDto insertProduct(@Valid @RequestBody CreateProductDto createProductDto) {
-        return convertToDto(productService.createProduct(createProductDto));
+    public ProductDto insertProduct(@Valid @RequestBody CreateProductDto dto) {
+        return convertToDto(productService.createProduct(dto));
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDto updateProduct(@Valid @RequestBody UpdateProductDto dto) {
+        return convertToDto(productService.updateProduct(dto));
     }
 
     private List<ProductDto> convertToDto(List<Product> products) {

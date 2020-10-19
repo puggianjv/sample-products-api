@@ -1,6 +1,7 @@
 package br.com.puggian.products.api.service.impl;
 
-import br.com.puggian.products.api.dto.CreateProductDto;
+import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.UpdateProductDto;
 import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.model.Supplier;
@@ -34,17 +35,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(CreateProductDto createProductDto) {
-        Supplier supplier = supplierService.getSupplierById(createProductDto.getSupplierId());
+    public Product createProduct(CreateProductDto dto) {
+        Supplier supplier = supplierService.getSupplierById(dto.getSupplierId());
         LocalDateTime now = LocalDateTime.now();
         Product product = Product.builder()
-                .name(createProductDto.getName())
+                .name(dto.getName())
                 .quantity(0L)
-                .price(createProductDto.getPrice())
+                .price(dto.getPrice())
                 .creation(now)
                 .lastUpdate(now)
                 .supplier(supplier)
                 .build();
+
+        return productRepository.save(product);
+    }
+
+    @Override
+    public Product updateProduct(UpdateProductDto dto) {
+        Product product = getProductById(dto.getId());
+        LocalDateTime now = LocalDateTime.now();
+
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setLastUpdate(now);
 
         return productRepository.save(product);
     }
