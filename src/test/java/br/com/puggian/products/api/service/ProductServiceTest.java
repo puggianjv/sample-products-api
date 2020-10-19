@@ -1,7 +1,10 @@
 package br.com.puggian.products.api.service;
 
 import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.ProductQuantityDto;
 import br.com.puggian.products.api.dto.input.UpdateProductDto;
+import br.com.puggian.products.api.exception.QuantityExceededMaximumValueException;
+import br.com.puggian.products.api.exception.QuantityNotAvailableException;
 import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.model.Supplier;
@@ -101,7 +104,7 @@ public class ProductServiceTest {
         Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, Collections.emptyList());
 
         when(supplierService.getSupplierById(1L)).thenReturn(supplier);
-        when(productRepository.save(any())).thenReturn(new Product());
+        when(productRepository.save(any(Product.class))).thenReturn(new Product());
 
         productService.createProduct(dto);
 
@@ -126,7 +129,7 @@ public class ProductServiceTest {
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
-        when(productRepository.save(any())).thenReturn(new Product());
+        when(productRepository.save(any(Product.class))).thenReturn(new Product());
 
         productService.updateProduct(dto, 1L);
 
@@ -158,6 +161,98 @@ public class ProductServiceTest {
         doThrow(new EmptyResultDataAccessException(1)).when(productRepository).deleteById(1L);
 
         productService.deleteProduct(1L);
+    }
+
+    @Test
+    public void addQuantity_QuantityUpdatedWithPositiveValue_Product() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+        ProductQuantityDto dto = new ProductQuantityDto(1L);
+
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class))).thenReturn(new Product());
+
+        productService.addQuantity(dto, 1L);
+
+        verify(productRepository).save(captor.capture());
+        Product productToSave = captor.getValue();
+        assertEquals("Trakinas", productToSave.getName());
+        assertEquals(new Long(1L), productToSave.getQuantity());
+        assertEquals(BigDecimal.TEN, productToSave.getPrice());
+        assertEquals(new Long(1L), productToSave.getSupplier().getId());
+        assertEquals("Extra", productToSave.getSupplier().getName());
+    }
+
+    @Test
+    public void addQuantity_QuantityUpdatedWithNegativeValue_Product() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 1L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+        ProductQuantityDto dto = new ProductQuantityDto(-1L);
+
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productRepository.save(any(Product.class))).thenReturn(new Product());
+
+        productService.addQuantity(dto, 1L);
+
+        verify(productRepository).save(captor.capture());
+        Product productToSave = captor.getValue();
+        assertEquals("Trakinas", productToSave.getName());
+        assertEquals(new Long(0L), productToSave.getQuantity());
+        assertEquals(BigDecimal.TEN, productToSave.getPrice());
+        assertEquals(new Long(1L), productToSave.getSupplier().getId());
+        assertEquals("Extra", productToSave.getSupplier().getName());
+    }
+
+    @Test(expected = QuantityNotAvailableException.class)
+    public void addQuantity_QuantityUpdatedWithNegativeValueAndStockHasNotEnoughItems_ThrowQuantityNotAvailableException() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+        ProductQuantityDto dto = new ProductQuantityDto(-1L);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        productService.addQuantity(dto, 1L);
+    }
+
+    @Test(expected = QuantityExceededMaximumValueException.class)
+    public void addQuantity_QuantityUpdatedWithValueThatExceedsMaximumQuantity_ThrowQuantityExceededMaximumValueException() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+        ProductQuantityDto dto = new ProductQuantityDto(999999999L + 1L);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        productService.addQuantity(dto, 1L);
+    }
+
+    @Test(expected = QuantityExceededMaximumValueException.class)
+    public void addQuantity_QuantityUpdatedWithValueThatExceedsMaximumQuantityWhenSummedWithStock_ThrowQuantityExceededMaximumValueException() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Product product = new Product(1L, "Trakinas", 1L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        List<Product> products = Collections.singletonList(product);
+        supplier.setProducts(products);
+        ProductQuantityDto dto = new ProductQuantityDto(999999999L);
+
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        productService.addQuantity(dto, 1L);
     }
 
 }

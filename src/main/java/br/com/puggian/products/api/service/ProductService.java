@@ -1,6 +1,7 @@
 package br.com.puggian.products.api.service;
 
 import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.ProductQuantityDto;
 import br.com.puggian.products.api.dto.input.UpdateProductDto;
 import br.com.puggian.products.api.model.Product;
 
@@ -17,4 +18,6 @@ public interface ProductService {
     Product updateProduct(UpdateProductDto dto, Long id);
 
     void deleteProduct(Long id);
+
+    Product addQuantity(ProductQuantityDto dto, Long id);
 }

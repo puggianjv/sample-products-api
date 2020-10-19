@@ -1,7 +1,10 @@
 package br.com.puggian.products.api.service.impl;
 
 import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.ProductQuantityDto;
 import br.com.puggian.products.api.dto.input.UpdateProductDto;
+import br.com.puggian.products.api.exception.QuantityExceededMaximumValueException;
+import br.com.puggian.products.api.exception.QuantityNotAvailableException;
 import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import br.com.puggian.products.api.model.Product;
 import br.com.puggian.products.api.model.Supplier;
@@ -19,6 +22,8 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final SupplierService supplierService;
+
+    private static final int MAXIMUM_QUANTITY = 999999999;
 
     public ProductServiceImpl(ProductRepository productRepository, SupplierService supplierService) {
         this.productRepository = productRepository;
@@ -70,5 +75,26 @@ public class ProductServiceImpl implements ProductService {
         } catch (EmptyResultDataAccessException ex) {
             throw new ResourceNotFoundException("Product not found for id " + id);
         }
+    }
+
+    @Override
+    public Product addQuantity(ProductQuantityDto dto, Long id) {
+        Product product = getProductById(id);
+
+        if (Math.abs(dto.getQuantity()) > MAXIMUM_QUANTITY
+                || product.getQuantity() + dto.getQuantity() > MAXIMUM_QUANTITY) {
+            throw new QuantityExceededMaximumValueException("Quantity exceeded maximum value of: " + MAXIMUM_QUANTITY);
+        }
+
+        long newQuantity = product.getQuantity() + dto.getQuantity();
+        if (newQuantity < 0) {
+            throw new QuantityNotAvailableException("Quantity not available. Quantity in stock: " + product.getQuantity());
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        product.setLastUpdate(now);
+        product.setQuantity(newQuantity);
+
+        return productRepository.save(product);
     }
 }

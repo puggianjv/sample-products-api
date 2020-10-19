@@ -1,6 +1,8 @@
 package br.com.puggian.products.api.controller;
 
 import br.com.puggian.products.api.dto.output.ApiErrorDto;
+import br.com.puggian.products.api.exception.QuantityExceededMaximumValueException;
+import br.com.puggian.products.api.exception.QuantityNotAvailableException;
 import br.com.puggian.products.api.exception.ResourceNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ResourceNotFoundException.class)
     public ApiErrorDto handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return new ApiErrorDto(ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ QuantityNotAvailableException.class, QuantityExceededMaximumValueException.class })
+    public ApiErrorDto handleQuantityException(RuntimeException ex) {
         return new ApiErrorDto(ex.getMessage());
     }
 

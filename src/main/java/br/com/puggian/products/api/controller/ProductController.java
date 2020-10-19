@@ -1,6 +1,7 @@
 package br.com.puggian.products.api.controller;
 
 import br.com.puggian.products.api.dto.input.CreateProductDto;
+import br.com.puggian.products.api.dto.input.ProductQuantityDto;
 import br.com.puggian.products.api.dto.input.UpdateProductDto;
 import br.com.puggian.products.api.dto.output.ProductDto;
 import br.com.puggian.products.api.model.Product;
@@ -44,7 +45,7 @@ public class ProductController {
         return convertToDto(productService.createProduct(dto));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductDto updateProduct(@Valid @RequestBody UpdateProductDto dto, @PathVariable Long id) {
         return convertToDto(productService.updateProduct(dto, id));
@@ -54,6 +55,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+    }
+
+    @PatchMapping("/{id}/add")
+    @ResponseStatus(HttpStatus.OK)
+    public ProductDto addQuantity(@Valid @RequestBody ProductQuantityDto dto, @PathVariable Long id) {
+        return convertToDto(productService.addQuantity(dto, id));
     }
 
     private List<ProductDto> convertToDto(List<Product> products) {
