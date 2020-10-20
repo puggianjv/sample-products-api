@@ -33,7 +33,7 @@ public class SupplierServiceTest {
     @Test
     public void getSupplierById_SupplierFound_Supplier() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, Collections.emptyList());
+        Supplier supplier = new Supplier(1L, "Extra", Collections.emptyList(), dateTime, dateTime);
 
         when(supplierRepository.findById(1L)).thenReturn(Optional.of(supplier));
 

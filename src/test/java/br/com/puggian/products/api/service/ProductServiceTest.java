@@ -51,7 +51,7 @@ public class ProductServiceTest {
     @Test
     public void listProducts_ProductsFound_List() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product1 = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         Product product2 = new Product(2L, "Doritos", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Arrays.asList(product1, product2);
@@ -77,7 +77,7 @@ public class ProductServiceTest {
     @Test
     public void listProducts_ProductsFoundWithPagination_SplitList() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product1 = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         Product product2 = new Product(2L, "Doritos", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Arrays.asList(product1, product2);
@@ -95,7 +95,7 @@ public class ProductServiceTest {
     @Test
     public void getProductById_ProductFound_Product() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -119,7 +119,7 @@ public class ProductServiceTest {
         CreateProductDto dto = new CreateProductDto("Trakinas", BigDecimal.ONE, 1L);
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, Collections.emptyList());
+        Supplier supplier = new Supplier(1L, "Extra", Collections.emptyList(), dateTime, dateTime);
 
         when(supplierService.getSupplierById(1L)).thenReturn(supplier);
         when(productRepository.save(any(Product.class))).thenReturn(new Product());
@@ -138,7 +138,7 @@ public class ProductServiceTest {
     @Test
     public void updateProduct_ProductUpdated_Product() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -164,7 +164,7 @@ public class ProductServiceTest {
     public void deleteProduct_ProductDeleted_CallRepositoryWithId() {
         ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -190,7 +190,7 @@ public class ProductServiceTest {
     @Test
     public void addQuantity_QuantityUpdatedWithPositiveValue_Product() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -215,7 +215,7 @@ public class ProductServiceTest {
     @Test
     public void addQuantity_QuantityUpdatedWithNegativeValue_Product() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 1L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -240,7 +240,7 @@ public class ProductServiceTest {
     @Test(expected = QuantityNotAvailableException.class)
     public void addQuantity_QuantityUpdatedWithNegativeValueAndStockHasNotEnoughItems_ThrowQuantityNotAvailableException() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -254,7 +254,7 @@ public class ProductServiceTest {
     @Test(expected = QuantityExceededMaximumValueException.class)
     public void addQuantity_QuantityUpdatedWithValueThatExceedsMaximumQuantity_ThrowQuantityExceededMaximumValueException() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 0L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
@@ -268,7 +268,7 @@ public class ProductServiceTest {
     @Test(expected = QuantityExceededMaximumValueException.class)
     public void addQuantity_QuantityUpdatedWithValueThatExceedsMaximumQuantityWhenSummedWithStock_ThrowQuantityExceededMaximumValueException() {
         LocalDateTime dateTime = LocalDateTime.now();
-        Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
+        Supplier supplier = new Supplier(1L, "Extra", null, dateTime, dateTime);
         Product product = new Product(1L, "Trakinas", 1L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);

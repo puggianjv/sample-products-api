@@ -6,16 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -26,6 +28,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Where(clause = "deleted = false")
+@EntityListeners(AuditingEntityListener.class)
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +37,10 @@ public class Product {
     private String name;
     private Long quantity;
     private BigDecimal price;
+
+    @CreatedDate
     private LocalDateTime creation;
+    @LastModifiedDate
     private LocalDateTime lastUpdate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -45,19 +51,6 @@ public class Product {
 
     public void setDeleted() {
         this.deleted = true;
-    }
-
-    @PrePersist
-    public void onPrePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.setCreation(now);
-        this.setLastUpdate(now);
-    }
-
-    @PreUpdate
-    public void onPreUpdate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.setLastUpdate(now);
     }
 
 }
