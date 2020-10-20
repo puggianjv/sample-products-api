@@ -35,9 +35,10 @@ OBS.: suppliers are not created by default on docker initialization. You can cre
 
 ### Swagger ###
 
-This application is configured with Swagger-ui console. You can use it by entering in `/v1/swagger-ui.html`
+This application is configured with Swagger-ui console. You can access it on `/v1/swagger-ui.html`
 
 ### Postman ###
 
 You can also test this application with this Postman example collection:
-* [Download collection](https://drive.google.com/file/d/1-1Ch_-vXG4wGF9qJmxpt5G1x5XQH_0mC/view?usp=sharing)
+
+ * [Download collection](https://drive.google.com/file/d/1-1Ch_-vXG4wGF9qJmxpt5G1x5XQH_0mC/view?usp=sharing)
