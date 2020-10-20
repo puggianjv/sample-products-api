@@ -1,29 +1,43 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+Rest API with Java version 1.8, Maven, Spring and MySql to store a list of products from different suppliers.
 
-### What is this repository for? ###
+## You need first ##
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* Java 1.8
+* Maven
+* MySQL
 
-### How do I get set up? ###
+## Running the project ##
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+### Using java ###
+ You can run it on your local machine by connecting to a local MySQL. To run it, configure the src/main/resources/application.properties file or use the following environment variables: [APP_PORT, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD].
+ Run it with the command `mvn spring-boot:run`
 
-### Contribution guidelines ###
+### Using docker ###
+Requires docker-compose installed.
 
-* Writing tests
-* Code review
-* Other guidelines
+Run it with command `docker-compose up --build`
 
-### Who do I talk to? ###
+OBS.: suppliers are not created by default on docker initialization. You can create them with create supplier endpoint.
 
-* Repo owner or admin
-* Other community or team contact
+## Usage ##
+
+### Endpoints ###
+
+* `v1/products?page={page}&size={size}` [GET]: list products.
+* `v1/products/{id}` [GET]: get product.
+* `v1/products` [POST]: create product.
+* `v1/products/{id}` [PATCH]: update product name and price.
+* `v1/products/{id}` [DELETE]: delete product.
+* `v1/products/{id}/add` [PATCH]: add or remove product quantity of stock.
+* `v1/suppliers/` [POST]: create supplier.
+
+### Swagger ###
+
+This application is configured with Swagger-ui console. You can use it by entering in `/v1/swagger-ui.html`
+
+### Postman ###
+
+You can also test this application with this Postman example collection:
+* [Download collection](https://drive.google.com/file/d/1-1Ch_-vXG4wGF9qJmxpt5G1x5XQH_0mC/view?usp=sharing)
