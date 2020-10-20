@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.puggian</groupId>
 	<artifactId>products-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>products-api</name>
 	<description>API to store a list of products from different suppliers</description>
 
