@@ -1,16 +1,14 @@
 package br.com.puggian.products.api.dto.input;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductQuantityDto {
 
     @NotNull(message = "{product.quantity.notNull}")

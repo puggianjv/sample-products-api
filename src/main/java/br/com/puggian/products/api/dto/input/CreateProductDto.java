@@ -1,9 +1,8 @@
 package br.com.puggian.products.api.dto.input;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -11,10 +10,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreateProductDto {
 
     @NotBlank(message = "{product.name.notBlank}")
