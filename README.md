@@ -12,12 +12,12 @@ Rest API with Java version 1.8, Maven, Spring and MySql to store a list of produ
 
 ### Using java ###
  You can run it on your local machine by connecting to a local MySQL. To run it, configure the src/main/resources/application.properties file or use the following environment variables: [APP_PORT, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD].
- Run it with the command `mvn spring-boot:run`
+ * Run it with the command `mvn spring-boot:run`
 
 ### Using docker ###
 Requires docker-compose installed.
 
-Run it with command `docker-compose up --build`
+* Run it with `./mvnw clean package -DskipTests && docker-compose up --build`
 
 OBS.: suppliers are not created by default on docker initialization. You can create them with create supplier endpoint.
 
