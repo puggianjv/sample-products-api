@@ -17,7 +17,7 @@ Rest API with Java version 1.8, Maven, Spring and MySql to store a list of produ
 ### Using docker ###
 Requires docker-compose installed.
 
-* Run it with `./mvnw clean package -DskipTests && docker-compose up --build`
+* Run it with `mvn clean package -DskipTests && docker-compose up --build`
 
 OBS.: suppliers are not created by default on docker initialization. You can create them with create supplier endpoint.
 
