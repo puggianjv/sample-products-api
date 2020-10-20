@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,6 +23,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
+@Where(clause = "deleted = false")
 public class Product {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +37,12 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Supplier supplier;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted;
+
+    public void setDeleted() {
+        this.deleted = true;
+    }
 
 }

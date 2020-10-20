@@ -28,8 +28,8 @@ public class ProductMapperTest {
     public void convertProductToDto_ProductListConverted_DtoList() {
         LocalDateTime dateTime = LocalDateTime.now();
         Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
-        Product product1 = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
-        Product product2 = new Product(2L, "Doritos", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        Product product1 = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
+        Product product2 = new Product(2L, "Doritos", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Arrays.asList(product1, product2);
         supplier.setProducts(products);
 
@@ -48,7 +48,7 @@ public class ProductMapperTest {
     public void convertProductToDto_ProductConverted_Dto() {
         LocalDateTime dateTime = LocalDateTime.now();
         Supplier supplier = new Supplier(1L, "Extra", dateTime, dateTime, null);
-        Product product = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier);
+        Product product = new Product(1L, "Trakinas", 10L, BigDecimal.TEN, dateTime, dateTime, supplier, false);
         List<Product> products = Collections.singletonList(product);
         supplier.setProducts(products);
 

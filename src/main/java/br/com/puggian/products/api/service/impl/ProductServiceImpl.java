@@ -12,7 +12,6 @@ import br.com.puggian.products.api.repository.ProductRepository;
 import br.com.puggian.products.api.service.ProductService;
 import br.com.puggian.products.api.service.SupplierService;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -72,17 +71,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long id) {
-        try {
-            productRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new ResourceNotFoundException("Product not found for id " + id);
-        }
+    public void softDelete(Long id) {
+        Product product = this.getProductById(id);
+        product.setDeleted();
+        productRepository.save(product);
     }
 
     @Override
     public Product addQuantity(ProductQuantityDto dto, Long id) {
-        Product product = getProductById(id);
+        Product product = this.getProductById(id);
 
         if (Math.abs(dto.getQuantity()) > MAXIMUM_QUANTITY
                 || product.getQuantity() + dto.getQuantity() > MAXIMUM_QUANTITY) {
