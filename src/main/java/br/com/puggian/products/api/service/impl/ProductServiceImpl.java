@@ -11,11 +11,9 @@ import br.com.puggian.products.api.model.Supplier;
 import br.com.puggian.products.api.repository.ProductRepository;
 import br.com.puggian.products.api.service.ProductService;
 import br.com.puggian.products.api.service.SupplierService;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,13 +43,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(CreateProductDto dto) {
         Supplier supplier = supplierService.getSupplierById(dto.getSupplierId());
-        LocalDateTime now = LocalDateTime.now();
         Product product = Product.builder()
                 .name(dto.getName())
                 .quantity(0L)
                 .price(dto.getPrice())
-                .creation(now)
-                .lastUpdate(now)
                 .supplier(supplier)
                 .build();
 
@@ -61,11 +56,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product updateProduct(UpdateProductDto dto, Long id) {
         Product product = getProductById(id);
-        LocalDateTime now = LocalDateTime.now();
-
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
-        product.setLastUpdate(now);
 
         return productRepository.save(product);
     }
@@ -74,6 +66,7 @@ public class ProductServiceImpl implements ProductService {
     public void softDelete(Long id) {
         Product product = this.getProductById(id);
         product.setDeleted();
+
         productRepository.save(product);
     }
 
@@ -91,8 +84,6 @@ public class ProductServiceImpl implements ProductService {
             throw new QuantityNotAvailableException("Quantity not available. Quantity in stock: " + product.getQuantity());
         }
 
-        LocalDateTime now = LocalDateTime.now();
-        product.setLastUpdate(now);
         product.setQuantity(newQuantity);
 
         return productRepository.save(product);

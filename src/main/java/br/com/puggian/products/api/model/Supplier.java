@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,5 +31,18 @@ public class Supplier {
 
     @OneToMany(mappedBy="supplier", fetch = FetchType.LAZY)
     private List<Product> products;
+
+    @PrePersist
+    public void onPrePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.setCreation(now);
+        this.setLastUpdate(now);
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.setLastUpdate(now);
+    }
 
 }

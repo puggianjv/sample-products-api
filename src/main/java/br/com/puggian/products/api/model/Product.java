@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -43,6 +45,19 @@ public class Product {
 
     public void setDeleted() {
         this.deleted = true;
+    }
+
+    @PrePersist
+    public void onPrePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.setCreation(now);
+        this.setLastUpdate(now);
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.setLastUpdate(now);
     }
 
 }
