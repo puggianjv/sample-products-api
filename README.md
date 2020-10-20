@@ -1,4 +1,4 @@
-# README #
+# Products API #
 
 Rest API with Java version 1.8, Maven, Spring and MySql to store a list of products from different suppliers.
 
